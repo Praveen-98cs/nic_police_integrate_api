@@ -36,7 +36,7 @@ type nicApiResponse record {
 
 type policeApiResponse record {
     boolean valid;
-    boolean isGuily?;
+    boolean isGuilty?;
     string charges?;
 };
 
@@ -72,6 +72,7 @@ type allRequests record{
 mysql:Client mysqlEp = check new (host = host, user = user, password = password, database = database, port = port);
 
 sendsms:Client sendsmsEp = check new ();
+
 idcheckapi:Client idcheckapiEp = check new (clientConfig = {
     auth: {
         clientId: "q2ivPDHEm5B0VbAf9W_skfuMIj8a",
@@ -119,7 +120,7 @@ service / on new http:Listener(9090) {
         sql:ExecutionResult _ = check mysqlEp->execute(insertQuery);
         log:printInfo("Successfully inserted to the verification table");
 
-        if policeResult.isGuily is true {
+        if policeResult.isGuilty is true {
             output result = {
                 isNicValid: true,
                 isGuilty: true,
@@ -130,7 +131,9 @@ service / on new http:Listener(9090) {
 
             return result;
 
-        } else {
+        }
+        
+        if policeResult.isGuilty is false  {
             output result = {
                 isNicValid: true,
                 isGuilty: false,
