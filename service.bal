@@ -94,7 +94,7 @@ service / on new http:Listener(9090) {
 
         nicApiResponse nicResult = check idcheckapiEp->getChecknicNic(nic.trim());
 
-        if nicResult.valid == false {
+        if nicResult.valid is false {
             output result = {
                 isNicValid: false
             };
@@ -105,11 +105,11 @@ service / on new http:Listener(9090) {
 
         policeApiResponse policeResult = check policecheckapiEp->getPolicecheckNic(nic.trim());
 
-        if policeResult.valid == false {
+        if policeResult.valid is false {
             output result = {
                 isNicValid: false
             };
-
+            log:printInfo("Entered NIC is Invalid while police checking");
             return result;
         }
 
@@ -119,7 +119,7 @@ service / on new http:Listener(9090) {
         sql:ExecutionResult _ = check mysqlEp->execute(insertQuery);
         log:printInfo("Successfully inserted to the verification table");
 
-        if policeResult.isGuily == true {
+        if policeResult.isGuily is true {
             output result = {
                 isNicValid: true,
                 isGuilty: true,
