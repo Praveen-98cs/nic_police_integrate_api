@@ -151,7 +151,7 @@ service / on new http:Listener(9090) {
         log:printInfo("verification_details table updated: "+ result.toString());
 
         string sendSmsResponse = check sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Getting police clearance Certificate\n\nNIC: Verified\nPolice Report: Verified\nAddress: Verified");
-        log:printInfo(sendSmsResponse);
+        log:printInfo(sendSmsResponse + ": +94" + phone.substring(1));
 
         success response={
             success:true,
