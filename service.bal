@@ -187,7 +187,7 @@ service / on new http:Listener(9090) {
     resource function get getAllRequests() returns allRequests[]|error? {
 
 
-        stream<allRequests, error?> response =mysqlEp->query(`SELECT * FROM verfication_details`);
+        stream<allRequests, error?> response =mysqlEp->query(`SELECT * FROM verification_details`);
 
         allRequests[]? allrqst = check from allRequests request in response
             
