@@ -8,34 +8,39 @@
         "addressinsertapi": {
           "type": "object",
           "properties": {
-            "port": {
-              "type": "integer",
-              "description": ""
-            },
-            "database": {
+            "addressClientSecret": {
               "type": "string",
               "description": ""
             },
-            "password": {
+            "addressClientId": {
               "type": "string",
               "description": ""
             },
-            "user": {
+            "policeClientSecret": {
               "type": "string",
               "description": ""
             },
-            "host": {
+            "policeClientId": {
+              "type": "string",
+              "description": ""
+            },
+            "idClientSecret": {
+              "type": "string",
+              "description": ""
+            },
+            "idClientId": {
               "type": "string",
               "description": ""
             }
           },
           "additionalProperties": false,
           "required": [
-            "port",
-            "database",
-            "password",
-            "user",
-            "host"
+            "addressClientSecret",
+            "addressClientId",
+            "policeClientSecret",
+            "policeClientId",
+            "idClientSecret",
+            "idClientId"
           ]
         }
       },
