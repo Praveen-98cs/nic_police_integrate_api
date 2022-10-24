@@ -272,6 +272,21 @@ modules = [
 ]
 
 [[package]]
+org = "ballerinax"
+name = "slack"
+version = "3.0.0"
+dependencies = [
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "mime"},
+	{org = "ballerina", name = "os"},
+	{org = "ballerina", name = "regex"},
+	{org = "ballerina", name = "url"}
+]
+modules = [
+	{org = "ballerinax", packageName = "slack", moduleName = "slack"}
+]
+
+[[package]]
 org = "muthahhar"
 name = "addresscheckapi"
 version = "1.0.0"
@@ -291,6 +306,7 @@ dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "log"},
 	{org = "ballerinai", name = "observe"},
+	{org = "ballerinax", name = "slack"},
 	{org = "muthahhar", name = "addresscheckapi"},
 	{org = "muthahhar", name = "idcheckapi"},
 	{org = "muthahhar", name = "policecheckapi"},
