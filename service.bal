@@ -1,3 +1,4 @@
+import ballerinax/slack;
 import muthahhar/addresscheckapi;
 import wso2/choreo.sendsms;
 import muthahhar/policecheckapi;
@@ -38,6 +39,19 @@ type addressApiResponse record {
     string address?;
 };
 
+slack:Client slackEp = check new (config = {
+    auth: {
+        token: "xoxp-4260950275045-4276539874369-4260620955270-84ed464567e99ef5ca67cdb700117c14"
+    }
+});
+
+function sendNotificationtoSlack(string nic,string address,string errorMsg) returns string|error? {
+    string Message="Issue: The "+errorMsg+". ( NIC: "+nic+". Address: "+address+")";
+    slack:Message message={channelName: "gramachecksupport", text: Message};
+    string slackResponse = check slackEp->postMessage(message);
+    return slackResponse;
+}
+
 service / on new http:Listener(9090) {
 
     resource function get integrateCheck/[string nic]/[string address]/[string phone]() returns output|error? {
@@ -62,6 +76,7 @@ service / on new http:Listener(9090) {
             };
 
             log:printInfo("Entered NIC is Invalid");
+            future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Entered Nic is Valid");
             future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Entered NIC is Invalid: " + nic);
             return result;
         }
@@ -82,6 +97,7 @@ service / on new http:Listener(9090) {
                 msg: "Police Validation Failed"
             };
             log:printInfo("Police Validation Failed");
+            future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Police Validation Failed");
             future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Police Validation Failed");
             return result;
         }
@@ -95,28 +111,29 @@ service / on new http:Listener(9090) {
             }
         });
 
-        addressApiResponse addressResult=check addresscheckapiEp->getCheckaddressNicAddress(nic.trim(),address.trim());
+        addressApiResponse addressResult = check addresscheckapiEp->getCheckaddressNicAddress(nic.trim(), address.trim());
 
-        if addressResult.valid is false{
+        if addressResult.valid is false {
             output result = {
                 success: false,
                 msg: "Address Verification Failed"
             };
 
             log:printInfo("Address Verification Failed");
+            future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Address Validation Failed");
             future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Address Validation Failed");
             return result;
-        }else{
+        } else {
             output result = {
                 success: true,
                 msg: "All Validations Are Successful"
             };
 
             log:printInfo("All Validations are Successful");
+            future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"All Validation Successful. You can Obtain your Clearance certificate");
             future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "All Validations are successful. You can Obtain your Clearance certificate");
             return result;
         }
-
 
     }
 
