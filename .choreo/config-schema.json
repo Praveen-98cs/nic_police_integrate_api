@@ -31,6 +31,10 @@
             "idClientId": {
               "type": "string",
               "description": ""
+            },
+            "slackAuthToken": {
+              "type": "string",
+              "description": ""
             }
           },
           "additionalProperties": false,
@@ -40,7 +44,8 @@
             "policeClientSecret",
             "policeClientId",
             "idClientSecret",
-            "idClientId"
+            "idClientId",
+            "slackAuthToken"
           ]
         }
       },

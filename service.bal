@@ -18,6 +18,8 @@ configurable string idClientSecret = ?;
 
 configurable string idClientId = ?;
 
+configurable string slackAuthToken = ?;
+
 type output record {
     boolean success;
     string msg;
@@ -41,7 +43,7 @@ type addressApiResponse record {
 
 slack:Client slackEp = check new (config = {
     auth: {
-        token: "xoxp-4260950275045-4276539874369-4260620955270-84ed464567e99ef5ca67cdb700117c14"
+        token: slackAuthToken
     }
 });
 
@@ -77,7 +79,7 @@ service / on new http:Listener(9090) {
 
             log:printInfo("Entered NIC is Invalid");
             future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Entered Nic is Valid");
-            future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Entered NIC is Invalid: " + nic);
+            future<string|error> _ = start sendsmsEp->sendSms(toMobile =phone, message = "Entered NIC is Invalid: " + nic);
             return result;
         }
 
@@ -98,7 +100,7 @@ service / on new http:Listener(9090) {
             };
             log:printInfo("Police Validation Failed");
             future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Police Validation Failed");
-            future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Police Validation Failed");
+            future<string|error> _ = start sendsmsEp->sendSms(toMobile =phone, message = "Police Validation Failed");
             return result;
         }
 
@@ -121,7 +123,7 @@ service / on new http:Listener(9090) {
 
             log:printInfo("Address Verification Failed");
             future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"Address Validation Failed");
-            future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "Address Validation Failed");
+            future<string|error> _ = start sendsmsEp->sendSms(toMobile =phone, message = "Address Validation Failed");
             return result;
         } else {
             output result = {
@@ -131,7 +133,7 @@ service / on new http:Listener(9090) {
 
             log:printInfo("All Validations are Successful");
             future<string|error> _=<future<string|error>>start sendNotificationtoSlack(nic,address,"All Validation Successful. You can Obtain your Clearance certificate");
-            future<string|error> _ = start sendsmsEp->sendSms(toMobile = "+94" + phone.substring(1), message = "All Validations are successful. You can Obtain your Clearance certificate");
+            future<string|error> _ = start sendsmsEp->sendSms(toMobile =phone, message = "All Validations are successful. You can Obtain your Clearance certificate");
             return result;
         }
 
